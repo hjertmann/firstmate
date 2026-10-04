@@ -1120,6 +1120,34 @@ test_create_task_scopes_workspace_to_secondmate_home() {
   pass "fm_backend_cmux_create_task: scopes a secondmate home's workspace under its 2ndmate-<id> title"
 }
 
+# Drives the real fm-spawn.sh --secondmate --backend cmux entry point from a
+# primary-shaped FM_HOME with the fake cmux. The empty canned responses make the
+# spawn stop after create (no workspace id resolves), which is fine: the logged
+# new-workspace call is what proves the spawn branch shadowed FM_HOME to the
+# secondmate home and so used the 2ndmate-<id> title, not the primary's.
+test_spawn_secondmate_shadows_home_for_cmux_create() {
+  local dir primary sm fb log
+  dir="$TMP_ROOT/spawn-secondmate"; mkdir -p "$dir/responses"
+  primary="$dir/primary"; mkdir -p "$primary/state" "$primary/data" "$primary/config"
+  sm="$dir/sm-home"; mkdir -p "$sm/bin" "$sm/state" "$sm/data" "$sm/config" "$sm/projects"
+  printf 'sm1\n' > "$sm/.fm-secondmate-home"
+  printf '# placeholder\n' > "$sm/AGENTS.md"
+  printf 'charter\n' > "$sm/data/charter.md"
+  git -C "$sm" init -q -b main
+  fb=$(make_cmux_fakebin "$dir")
+  PATH="$fb:$PATH" FM_CMUX_LOG="$dir/log" FM_CMUX_RESPONSES="$dir/responses" \
+    FM_GATE_REFUSE_BYPASS=1 FM_SPAWN_NO_GUARD=1 FM_HOME="$primary" FM_ROOT_OVERRIDE="$ROOT" \
+    FM_STATE_OVERRIDE="$primary/state" FM_DATA_OVERRIDE="$primary/data" FM_CONFIG_OVERRIDE="$primary/config" \
+    "$ROOT/bin/fm-spawn.sh" sm1 "$sm" "sh -c 'echo hi'" --secondmate --backend cmux >/dev/null 2>&1
+  log=$(cat "$dir/log")
+  assert_contains "$log" $'\x1f''new-workspace'$'\x1f''--name'$'\x1f''fm-2ndmate-sm1-' \
+    "fm-spawn --secondmate on cmux did not create the workspace under the 2ndmate-scoped title"
+  case "$log" in
+    *fm-firstmate-*) fail "fm-spawn --secondmate on cmux leaked the primary's firstmate-scoped title" ;;
+  esac
+  pass "fm-spawn.sh --secondmate --backend cmux: shadows FM_HOME to the secondmate home for the create call"
+}
+
 # A primary-side target_ready must accept a secondmate's 2ndmate-scoped
 # workspace (held id's own title ends in the expected task id) and reject one
 # whose title ends in a different task id without probing the surface.
@@ -1216,5 +1244,6 @@ test_kill_is_best_effort_when_close_workspace_fails
 test_kill_recovers_stale_target_by_label
 test_list_live_filters_by_title_prefix
 test_create_task_scopes_workspace_to_secondmate_home
+test_spawn_secondmate_shadows_home_for_cmux_create
 test_target_ready_accepts_secondmate_workspace_from_primary_home
 test_target_ready_rejects_other_task_suffix
