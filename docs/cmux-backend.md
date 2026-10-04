@@ -76,6 +76,8 @@ A scoped-title lookup after creation was deliberately dropped by the captain: ti
 If a printed ref never resolves, spawn fails after a best-effort `close-workspace` on that ref, and names the leftover workspace title for manual cleanup only if that close does not report success.
 If no ref is printed, spawn fails, closes nothing, and names the leftover workspace title for manual cleanup.
 If the workspace resolves but its default surface does not, spawn closes it through the normal uuid close path described under "Current operation and safety".
+Secondmate homes are supported on cmux: a `--secondmate` spawn stands up that home's own workspace, titled with its `2ndmate-<id>` home label, by scoping the create call to the secondmate's `FM_HOME` exactly as the tmux and herdr backends do.
+cmux has no recovery-grade agent-process classifier yet, so a secondmate on cmux uses the generic ordinary-launch recovery semantics rather than a verified liveness probe.
 
 ```text
 backend=cmux
