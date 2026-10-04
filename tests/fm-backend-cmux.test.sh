@@ -1120,23 +1120,36 @@ test_create_task_scopes_workspace_to_secondmate_home() {
   pass "fm_backend_cmux_create_task: scopes a secondmate home's workspace under its 2ndmate-<id> title"
 }
 
-# fm-spawn.sh must no longer refuse --secondmate on backend=cmux at the backend
-# guard. We cannot drive a full secondmate launch here (it needs a seeded home
-# and a live harness), so this asserts the specific removed refusal message is
-# gone: the spawn now fails later (missing seeded home), never with the old
-# "backend=cmux does not support --secondmate" refusal.
-test_secondmate_spawn_not_refused_at_cmux_backend_guard() {
-  local dir state data config projects out
-  dir="$TMP_ROOT/secondmate-cmux-allowed"; state="$dir/state"; data="$dir/data"; config="$dir/config"; projects="$dir/projects"
-  mkdir -p "$state" "$data" "$config" "$projects"
-  out=$( FM_STATE_OVERRIDE="$state" FM_DATA_OVERRIDE="$data" FM_CONFIG_OVERRIDE="$config" FM_PROJECTS_OVERRIDE="$projects" \
-    "$ROOT/bin/fm-spawn.sh" sm-cmux-test --secondmate --backend cmux 2>&1 )
-  case "$out" in
-    *"does not support --secondmate"*)
-      fail "fm-spawn.sh still refuses backend=cmux for --secondmate at the backend guard: $out" ;;
-    *) : ;;
-  esac
-  pass "fm-spawn.sh: no longer refuses backend=cmux for --secondmate at the backend guard"
+# A primary-side target_ready must accept a secondmate's 2ndmate-scoped
+# workspace (held id's own title ends in the expected task id) and reject one
+# whose title ends in a different task id without probing the surface.
+test_target_ready_accepts_secondmate_workspace_from_primary_home() {
+  local dir sm fb title
+  dir="$TMP_ROOT/ready-secondmate"; mkdir -p "$dir/responses"
+  sm="$dir/sm-home"; mkdir -p "$sm"
+  printf 'sm1\n' > "$sm/.fm-secondmate-home"
+  title=$(cmux_expected_scoped_title fm-sm1 "$sm")
+  cmux_workspace_list_response "$dir" 1 "aaaaaaaa-0000-0000-0000-000000000000" "$title"
+  cmux_panes_response "$dir" 2 "bbbbbbbb-1111-1111-1111-111111111111"
+  fb=$(make_cmux_fakebin "$dir")
+  PATH="$fb:$PATH" FM_CMUX_LOG="$dir/log" FM_CMUX_RESPONSES="$dir/responses" \
+    bash -c '. "$0/bin/backends/cmux.sh"; fm_backend_cmux_target_ready "aaaaaaaa-0000-0000-0000-000000000000:bbbbbbbb-1111-1111-1111-111111111111" fm-sm1' "$ROOT"
+  expect_code 0 $? "primary-home target_ready should accept a secondmate-scoped workspace for its task id"
+  pass "fm_backend_cmux_target_ready: verifies a secondmate workspace from the primary's home"
+}
+
+test_target_ready_rejects_other_task_suffix() {
+  local dir fb status
+  dir="$TMP_ROOT/ready-other-suffix"; mkdir -p "$dir/responses"
+  cmux_workspace_list_response "$dir" 1 "aaaaaaaa-0000-0000-0000-000000000000" "fm-2ndmate-sm2-abc123-sm2"
+  fb=$(make_cmux_fakebin "$dir")
+  PATH="$fb:$PATH" FM_CMUX_LOG="$dir/log" FM_CMUX_RESPONSES="$dir/responses" \
+    bash -c '. "$0/bin/backends/cmux.sh"; fm_backend_cmux_target_ready "aaaaaaaa-0000-0000-0000-000000000000:bbbbbbbb-1111-1111-1111-111111111111" fm-sm1' "$ROOT"
+  status=$?
+  [ "$status" -ne 0 ] || fail "target_ready should reject a workspace titled for a different task id"
+  assert_not_contains "$(cat "$dir/log")" $'\x1f''list-panes' \
+    "target_ready should not probe the surface after a task-id mismatch"
+  pass "fm_backend_cmux_target_ready: rejects a held id whose title ends in a different task id"
 }
 
 # shellcheck source=/dev/null
@@ -1203,4 +1216,5 @@ test_kill_is_best_effort_when_close_workspace_fails
 test_kill_recovers_stale_target_by_label
 test_list_live_filters_by_title_prefix
 test_create_task_scopes_workspace_to_secondmate_home
-test_secondmate_spawn_not_refused_at_cmux_backend_guard
+test_target_ready_accepts_secondmate_workspace_from_primary_home
+test_target_ready_rejects_other_task_suffix
