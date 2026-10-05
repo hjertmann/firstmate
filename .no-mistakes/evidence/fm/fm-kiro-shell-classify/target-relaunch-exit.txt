@@ -1,0 +1,40 @@
+pane pid=10313  ps comm=[zsh (kiro-cli-term)]  pane_current_command=[zsh]
+fm_backend_agent_state tmux fmses:fm-t1 -> dead
+$ fm-control.sh t1 relaunch --note lab-proof-relaunch-on-kiro-renamed-shell
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+warning: /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw/data/t1/launch-brief.md records no ship branch; defaulting to legacy branch fm/t1
+warning: /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw/data/t1/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+relaunched t1 harness=claude from=claude model=default effort=default backend=tmux endpoint=fmses:fm-t1 worktree=/var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw/wt-t1
+exit=0
+agent state after: alive
+PCDKRCHRISTIANSEN02% cd -- '/var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw/wt-t1'
+PCDKRCHRISTIANSEN02% export GOTMPDIR=/tmp/fm-t1/gotmp
+PCDKRCHRISTIANSEN02% export COMPACT_ADVISER_DISABLE=1
+PCDKRCHRISTIANSEN02% export FM_TASK_ID=t1
+PCDKRCHRISTIANSEN02% . '/tmp/fm-t1+462b2f648cfdf07a542c6f4cf839b0d60080e612008ff5ef3f7e54f5cff689c4/launch.s1791201144.11114.12350.sh'
+(settled 75s) state: alive
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ➜ wt-t1 git:(task-t1) ctx:7%(in:68632 out:28) Opus 5.5:medium pony:ultra
+  ⏵⏵ bypass permissions on (shift+tab to cycle) · ← 1 agent
+$ fm-control.sh t1 exit
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw
+stopped t1 harness=claude backend=tmux endpoint=fmses:fm-t1 worktree=/var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.TuSjrw/wt-t1
+exit=0
+agent state after: dead
+  /usage-credits                                            Configure usage credits or request them from your admin when you hit a limit
+  /devops-agent:well-known-locations                        (devops-agent) Reference of Too Good To Go's known-good source IPs and countries — office egress IPs per city, AWS NAT gateway IPs per
+                                                            cluster/AZ, Twingate VPN and exit-node egress IPs, and the list of countries TGTG has a physical presence in. Use whenever an audit-log o…
+  /ripwire-quality-bar                                      Code QUALITY of what YOU just wrote, before you commit or say 'done', or verifying a cleanup: --quality-delta lists what got WORSE in 10
+                                                            kinds and exits 2 only when pre-existing code got materially worse; which restructuring a measured shape (humps/deep, a tangle) calls for…
+Resume this session with:
+claude --resume 503c9e94-a7e0-46f5-9378-81987239c269
+PCDKRCHRISTIANSEN02%

@@ -1,0 +1,14 @@
+pane pid=79676  ps comm=[notashell (kiro-cli-term)]  pane_current_command=[sleep]
+fm_backend_agent_state tmux fmses:fm-t1 -> ambiguous
+$ fm-control.sh t1 exit
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.IDI7Jv
+error: task t1's endpoint reads 'ambiguous' rather than a positively classified state; refusing to send a lifecycle command into an unattributed endpoint
+exit=1
+agent state after: ambiguous
+pane pid=80601  ps comm=[zshx (kiro-cli-term)]  pane_current_command=[sleep]
+fm_backend_agent_state tmux fmses:fm-t1 -> ambiguous
+$ fm-control.sh t1 exit
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.tmzaAH
+error: task t1's endpoint reads 'ambiguous' rather than a positively classified state; refusing to send a lifecycle command into an unattributed endpoint
+exit=1
+agent state after: ambiguous

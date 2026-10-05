@@ -1,0 +1,3 @@
+pane pid=77351  ps comm=[zsh (kiro-cli-term)]  pane_current_command=[zsh]
+fm_backend_agent_state tmux fmses:fm-t1 -> dead
+secondmate probe -> status=relaunchable state=dead reason= cause=confirmed agent absence on existing endpoint

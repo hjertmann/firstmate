@@ -1,0 +1,3 @@
+pane pid=78564  ps comm=[zsh (kiro-cli-term)]  pane_current_command=[zsh]
+fm_backend_agent_state tmux fmses:fm-t1 -> ambiguous
+secondmate probe -> status=skipped state=ambiguous reason=existing endpoint has ambiguous agent process (backend=tmux) cause=

@@ -1,0 +1,7 @@
+pane pid=71267  ps comm=[zsh (kiro-cli-term)]  pane_current_command=[zsh]
+fm_backend_agent_state tmux fmses:fm-t1 -> ambiguous
+$ fm-control.sh t1 exit
+error: task t1's endpoint reads 'ambiguous' rather than a positively classified state; refusing to send a lifecycle command into an unattributed endpoint
+exit=1
+agent state after: ambiguous
+PCDKRCHRISTIANSEN02%

@@ -1,0 +1,8 @@
+pane pid=69027  ps comm=[zsh (kiro-cli-term)]  pane_current_command=[zsh]
+fm_backend_agent_state tmux fmses:fm-t1 -> dead
+$ fm-control.sh t1 exit
+fm-gate-refuse: gate agent lifecycle permitted only against lab home /var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.rajLwl
+already-stopped t1 harness=claude backend=tmux endpoint=fmses:fm-t1 worktree=/var/folders/1g/rb2wmfd12k31tjy3rqkgk0dm0000gq/T//fm-lab.rajLwl/wt-t1
+exit=0
+agent state after: dead
+PCDKRCHRISTIANSEN02%
