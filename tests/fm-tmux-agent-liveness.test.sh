@@ -286,6 +286,16 @@ wait_for_state "$SESSION:idle" dead \
   || fail "an idle shell pane must classify dead"
 pass "tmux liveness: an idle shell pane classifies dead"
 
+# --- a shell renamed by a shell integration is still dead -------------------
+# Kiro CLI's integration makes every idle zsh report `zsh (kiro-cli-term)`, and
+# reading that as `other` blocked relaunching panes whose agents had exited.
+# macOS `ps -o comm=` carries the argv[0] rename; Linux keeps `bash`.
+
+new_window kiro bash -c "exec -a 'zsh (kiro-cli-term)' bash --norc --noprofile"
+wait_for_state "$SESSION:kiro" dead \
+  || fail "a Kiro-renamed idle shell pane must classify dead"
+pass "tmux liveness: a Kiro-renamed idle shell pane classifies dead"
+
 # --- a harness-named BACKGROUND process must not fake an agent --------------
 # Scoping to the foreground process group is what prevents this false alive; a
 # descendant walk of the pane would report this pane as running an agent.
