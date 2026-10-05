@@ -414,5 +414,15 @@ fi
   || fail "a dead-shell pane still showing Cursor's composer must never read empty"
 pass "cursor composer: a stale Cursor screen over a dead shell never reads empty"
 
+# A shell renamed by a shell integration (Kiro CLI reports `zsh (kiro-cli-term)`)
+# is still a shell, but the suffix rule must stay anchored to real shell names.
+[ "$(fm_agent_process_classify_name 'zsh (kiro-cli-term)')" = shell ] \
+  || fail "a suffix-renamed zsh must classify as a shell"
+[ "$(fm_agent_process_classify_name 'notashell (kiro-cli-term)')" = other ] \
+  || fail "an unknown name with a parenthesised suffix must stay other"
+[ "$(fm_agent_process_classify_name 'claude (kiro-cli-term)')" = agent ] \
+  || fail "an agent name with a parenthesised suffix must never become a shell"
+pass "classifier: a suffix-renamed shell is a shell; other suffixed names keep their verdict"
+
 cleanup_all
 trap - EXIT
